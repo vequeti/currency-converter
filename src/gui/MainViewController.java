@@ -3,11 +3,12 @@ package gui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import gui.model.Converter;
+import gui.util.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 
 public class MainViewController implements Initializable {
 	
@@ -25,6 +26,7 @@ public class MainViewController implements Initializable {
 	}
 	
 	public void onBtOkAction() {
-		System.out.println("OK");
+			Double item = Converter.conversion(Utils.tryParseToDouble(txtCurrency1.getText()));
+			txtCurrency2.setText(String.format("%.2f", item));
 	}
 }
