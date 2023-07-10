@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainViewController">
+   <children>
+      <Label layoutX="70.0" layoutY="30.0" prefHeight="25.0" text="USD">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="70.0" layoutY="140.0" prefHeight="25.0" text="BRL">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtCurrency1" alignment="CENTER_RIGHT" layoutX="145.0" layoutY="30.0" prefHeight="25.0" prefWidth="150.0">
+         <font>
+            <Font name="Arial" size="12.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="txtCurrency2" alignment="CENTER_RIGHT" layoutX="145.0" layoutY="140.0" prefHeight="25.0" prefWidth="150.0">
+         <font>
+            <Font name="Arial" size="12.0" />
+         </font>
+      </TextField>
+      <Button fx:id="btOk" layoutX="170.0" layoutY="70.0" mnemonicParsing="false" onAction="#onBtOkAction" prefHeight="50.0" prefWidth="55.0" text="OK">
+         <font>
+            <Font name="Arial Bold" size="18.0" />
+         </font>
+      </Button>
+   </children>
+</Pane>
