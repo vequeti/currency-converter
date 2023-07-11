@@ -2,11 +2,13 @@ package gui;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
-import gui.model.Converter;
 import gui.util.Constraints;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
@@ -15,43 +17,81 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import model.converter.Converter;
+import model.exceptions.ValidationException;
 
 public class MainViewController implements Initializable {
 	
-	@FXML
-	private TextField txtCurrency1;
+	Converter converter = new Converter();
 	
 	@FXML
-	private TextField txtCurrency2;
+	private TextField currencyOriginal;
+	
+	@FXML
+	private TextField currencyFinal;
 	
 	@FXML 
 	private Button btOk;
 	
 	@FXML
-	private ComboBox<String> comboBox1;
+	private ComboBox<String> upComboBox;
 	
 	@FXML
-	private ComboBox<String> comboBox2;
+	private ComboBox<String> downComboBox;
+	
+	@FXML
+	private Label labelError;
 	
 	private ObservableList<String> obsList;
 	
 	@Override
 	public void initialize(URL uri, ResourceBundle rb) {
 		Locale.setDefault(Locale.US);
-		Constraints.setTextFieldDouble(txtCurrency1);
+
+		initializeNodes();
+	}
+	
+	private void initializeNodes() {
+		Constraints.setTextFieldDouble(currencyOriginal);
 		
 		List<String> list = new ArrayList<>();
-		list.add("USD");
-		list.add("BRL");
-		list.add("EUR");
+		List<String> supList = Arrays.asList("USD", "BRL", "EUR", "GBP");
+		list.addAll(supList);
 		obsList = FXCollections.observableArrayList(list);
-		comboBox1.setItems(obsList);
-		comboBox2.setItems(obsList);
+		upComboBox.setItems(obsList);
+		downComboBox.setItems(obsList);
+		upComboBox.getSelectionModel().select(0);
+		downComboBox.getSelectionModel().select(1);
 	}
 	
 	public void onBtOkAction() {
-			Double item = Converter.conversion(comboBox1.getValue(), comboBox2.getValue(), Utils.tryParseToDouble(txtCurrency1.getText()));
-			txtCurrency2.setText(String.format("%.2f", item));
+		try {
+			conversion();
+		}
+		catch(ValidationException e) {
+			setErrorMessage(e.getErrors());
+		}
 	}
+	
+	private void conversion() {
+		ValidationException exception = new ValidationException("Validation error");
+
+		if(currencyOriginal.getText() == null || currencyOriginal.getText().trim().equals("")) {
+			exception.addError("currencyOriginal", "Field can't be empty");
+		}
+		if (exception.getErrors().size() > 0) {
+			throw exception;
+		}
+		
+		currencyOriginal.setText(String.format("%.2f", Utils.tryParseToDouble(currencyOriginal.getText())));
+		Double item = converter.conversion(upComboBox.getValue(), downComboBox.getValue(), Utils.tryParseToDouble(currencyOriginal.getText()));
+		currencyFinal.setText(String.format("%.2f", item));
+	}
+	
+	private void setErrorMessage(Map<String, String> errors) {
+		Set<String> fields = errors.keySet();
+		labelError.setText(fields.contains("currencyOriginal") ? errors.get("currencyOriginal") : "");
+		}
 }
